@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <div class="row mb-3">
+    <div class="col-md-12 d-flex justify-content-between">
+      <div>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/client}">Клиенты</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/agent}">Агенты</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/property}">Квартиры</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/agreement}">Договоры</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/review}">Отзывы</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="border p-3">
+      <h5>Отзывы</h5>
+
+      <table class="table">
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>Комментарий</th>
+          <th>Оценка агента</th>
+          <th>Оценка квартиры</th>
+          <th>id_договора</th>
+          <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${model.list}">
+          <td th:text="${r.id}"></td>
+          <td th:text="${r.comment}"></td>
+          <td th:text="${r.agentRating}"></td>
+          <td th:text="${r.propertyRating}"></td>
+          <td th:text="${r.agreementId}"></td>
+          <td>
+            <a class="btn btn-warning btn-sm" th:href="@{'/admin/review/edit/' + ${r.id}}">Редактировать</a>
+            <a class="btn btn-danger btn-sm" th:href="@{'/admin/review/delete/' + ${r.id}}">Удалить</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"
+              th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+              th:classappend="${pageNumber == filter.page} ? 'active'">
+            <a class="page-link"
+               th:href="@{/admin/review(page=${pageNumber}, size=${filter.size})}"
+               th:text="${pageNumber}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

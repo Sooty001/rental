@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+<main class="container">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <div class="border p-3">
+                <img th:src="'/images/' + ${model.base.photoUrl}" alt="User Avatar" class="img-fluid mb-3" style="width: 160px; height: 160px; object-fit: cover;">
+                <p><strong th:text="${model.lastName}">-</strong></p>
+                <p><strong th:text="${model.firstName}">-</strong></p>
+                <p><strong th:text="${model.middleName}">-</strong></p>
+                <p><strong th:text="${model.phone}">-</strong></p>
+                <p><strong th:text="${model.email}">-</strong></p>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Арендуемое жилье:</h5>
+                    <div th:if="${#lists.isEmpty(model.nowRealty)}" class="alert alert-info">
+                        Записей не найдено
+                    </div>
+                    <div th:if="${not #lists.isEmpty(model.nowRealty)}" class="border p-2 mb-2" th:each="nowProperty : ${model.nowRealty}">
+                        <p th:text="'Адрес: ' + ${nowProperty.city} + ', ' + ${nowProperty.street} + ', ' + ${nowProperty.houseNumber}">-</p>
+                        <a class="btn btn-outline-primary btn-sm" th:href="@{/property/{id}(id=${nowProperty.propertyId})}">Подробнее</a>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h5>История аренд:</h5>
+                    <div th:if="${#lists.isEmpty(model.historyRealty)}" class="alert alert-info">
+                        Записей не найдено
+                    </div>
+                    <div th:if="${not #lists.isEmpty(model.historyRealty)}" class="border p-2 mb-2" th:each="historyProperty : ${model.historyRealty}">
+                        <p th:text="'Адрес: ' + ${historyProperty.city} + ', ' + ${historyProperty.street} + ', ' + ${historyProperty.houseNumber}">-</p>
+                        <a class="btn btn-outline-primary btn-sm" th:href="@{/property/{id}(id=${historyProperty.propertyId})}">Подробнее</a>
+                        <a class="btn btn btn-outline-warning btn-sm" th:classappend="${historyProperty.isReview != 0} ? 'disabled' : ''"
+                           th:href="@{/review/{id}(id=${historyProperty.agreementId})}">Оставить отзыв</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

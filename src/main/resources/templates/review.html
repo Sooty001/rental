@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="border p-3">
+        <img th:src="'/images/' + ${model.photoUrl}" style="width: 100%; height: 347px;" alt="Фотография жилья">
+      </div>
+      <p><strong>Адрес:</strong> <span th:text="'г. ' + ${model.city} + ', ул. ' + ${model.street} + ', ' + ${model.houseNumber}">-</span></p>
+    </div>
+
+    <div class="col-md-6">
+      <div class="border p-3">
+        <h3 class="text-center mb-3">Оставьте свой отзыв</h3>
+        <form class="d-flex flex-column" method="post" th:action="@{/review/create/{id}(id=${model.agreementId})}" th:object="${form}">
+          <div class="mb-3">
+            <label>
+              <textarea class="form-control" rows="4" placeholder="Комментарий" th:field="*{comment}"></textarea>
+            </label>
+          </div>
+          <div class="mb-3">
+            <label for="housing-rating" class="form-label"><strong>Оценка жилья:</strong></label>
+            <select id="housing-rating" class="form-select" th:field="*{propertyRating}">
+              <option value="1">1 - Плохо</option>
+              <option value="2">2 - Удовлетворительно</option>
+              <option value="3">3 - Средне</option>
+              <option value="4">4 - Хорошо</option>
+              <option value="5" selected>5 - Отлично</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="agent-rating" class="form-label"><strong>Оценка агента, </strong> <span th:text="${model.agentName}">-</span>:</label>
+            <select id="agent-rating" class="form-select" th:field="*{agentRating}">
+              <option value="1">1 - Плохо</option>
+              <option value="2">2 - Удовлетворительно</option>
+              <option value="3">3 - Средне</option>
+              <option value="4">4 - Хорошо</option>
+              <option value="5" selected>5 - Отлично</option>
+            </select>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary">Опубликовать комментарий</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

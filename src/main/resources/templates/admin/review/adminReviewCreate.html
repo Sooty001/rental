@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <h5>Редактировать отзыв</h5>
+  <form class="d-flex flex-column align-items-center" method="post" th:action="@{/admin/review/create}" th:object="${form}">
+    <div class="mb-3 w-50">
+      <label for="comment" class="form-label fw-bold">Комментарий</label>
+      <input type="text" class="form-control" id="comment" th:field="*{comment}" placeholder="Введите комментарий">
+      <small th:if="${#fields.hasErrors('comment')}"
+             th:errors="*{comment}"
+             class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="agentRating" class="form-label fw-bold">Рейтинг агента</label>
+      <input type="number" class="form-control" id="agentRating" th:field="*{agentRating}">
+      <small th:if="${#fields.hasErrors('agentRating')}"
+             th:errors="*{agentRating}"
+             class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="propertyRating" class="form-label fw-bold">Рейтинг недвижимости</label>
+      <input type="number" class="form-control" id="propertyRating" th:field="*{propertyRating}">
+      <small th:if="${#fields.hasErrors('propertyRating')}"
+             th:errors="*{propertyRating}"
+             class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="agreement_id" class="form-label fw-bold">agreement_id</label>
+      <input type="number" class="form-control" id="agreement_id" th:field="*{agreementId}">
+      <small th:if="${#fields.hasErrors('agreementId')}"
+             th:errors="*{agreementId}"
+             class="text-danger">Error message</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

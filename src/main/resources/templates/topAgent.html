@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+    <div class="mt-4">
+        <a class="btn btn-outline-secondary" th:href="@{/agents/top(sort='loyalty')}">по лояльности клиентов</a>
+        <a class="btn btn-outline-secondary" th:href="@{/agents/top(sort='rating')}">по рейтингу</a>
+    </div>
+
+    <table class="table mt-4">
+        <thead>
+        <tr>
+            <th>Агент</th>
+            <th>Рейтинг</th>
+            <th>Сделки</th>
+            <th>Объявления</th>
+            <th>Связь</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="agent : ${model.listAgent}">
+            <td>
+                <img th:src="'/images/' + ${agent.photoUrl}" alt="User Icon" class="rounded-circle" style="width: 45px; height: 45px; object-fit: cover;">
+                <span th:text="${agent.firstName + ' ' + agent.middleName}">- -</span>
+            </td>
+            <td>
+                <span th:text="${'⭐️ ' + agent.rating}"></span><br>
+                <span th:text="${'Отзывы: ' + agent.countReview}"></span>
+            </td>
+            <td>
+                <span th:text="${agent.countDeal}"></span>
+            </td>
+            <td>
+                <span th:text="${agent.countAds}"></span>
+            </td>
+            <td><button class="btn btn-outline-primary">Написать</button></td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

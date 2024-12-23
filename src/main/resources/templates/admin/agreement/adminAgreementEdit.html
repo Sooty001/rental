@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <h5>Создать договор</h5>
+  <form class="d-flex flex-column align-items-center" method="post" th:action="@{'/admin/agreement/edit/' + ${id}}" th:object="${form}">
+    <div class="mb-3 w-50">
+      <label for="startDate" class="form-label fw-bold">Дата начала</label>
+      <input type="text" class="form-control" id="startDate" th:field="*{startDate}" placeholder="Введите дату начала">
+      <small th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="endDate" class="form-label fw-bold">Дата окончания</label>
+      <input type="text" class="form-control" id="endDate" th:field="*{endDate}" placeholder="Введите дату окончания">
+      <small th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="rentAmount" class="form-label fw-bold">Сумма аренды</label>
+      <input type="number" step="0.01" class="form-control" id="rentAmount" th:field="*{rentAmount}" placeholder="Введите сумму аренды">
+      <small th:if="${#fields.hasErrors('rentAmount')}" th:errors="*{rentAmount}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="clientId" class="form-label fw-bold">ID Клиента</label>
+      <input type="number" class="form-control" id="clientId" th:field="*{clientId}" placeholder="Введите ID клиента">
+      <small th:if="${#fields.hasErrors('clientId')}" th:errors="*{clientId}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="propertyId" class="form-label fw-bold">ID Квартиры</label>
+      <input type="number" class="form-control" id="propertyId" th:field="*{propertyId}" placeholder="Введите ID квартиры">
+      <small th:if="${#fields.hasErrors('propertyId')}" th:errors="*{propertyId}" class="text-danger">Error message</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

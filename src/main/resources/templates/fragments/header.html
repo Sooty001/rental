@@ -1,0 +1,17 @@
+<header class="container mt-4" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a th:href="@{/}" style="text-decoration: none; color: inherit;">
+      <h1>Rental</h1>
+    </a>
+    <h2 class="text-center" th:text="${model.base.title}"></h2>
+    <div class="d-flex align-items-center">
+      <span class="me-2" th:text="${model.base.firstName}">Имя пользователя</span>
+      <a th:href="@{/client/profile}" sec:authorize="hasRole('CLIENT') or hasRole('ADMIN')">
+        <img th:src="'/images/' + ${model.base.photoUrl}" alt="User Icon" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+      </a>
+      <a th:href="@{/agent/profile}" sec:authorize="hasRole('AGENT')">
+        <img th:src="'/images/' + ${model.base.photoUrl}" alt="User Icon" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+      </a>
+    </div>
+  </div>
+</header>

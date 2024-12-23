@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body class="bg-light">
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container d-flex justify-content-center align-items-center min-vh-75">
+  <div class="card p-4" style="max-width: 500px; width: 100%;">
+    <h3 class="text-center mb-4">Регистрация</h3>
+
+    <form th:action="@{/users/register}" th:object="${userRegisterCreateForm}" method="post">
+      <div class="mb-3">
+        <label for="email-register" class="form-label">Введите адрес электронной почты</label>
+        <input type="email" class="form-control" id="email-register" th:field="*{email}" placeholder="Email">
+        <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">Имя</label>
+        <input type="text" class="form-control" id="firstName" th:field="*{firstName}" placeholder="Имя">
+        <small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Фамилия</label>
+        <input type="text" class="form-control" id="lastName" th:field="*{lastName}" placeholder="Фамилия">
+        <small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="middleName" class="form-label">Отчество</label>
+        <input type="text" class="form-control" id="middleName" th:field="*{middleName}" placeholder="Отчество">
+        <small th:if="${#fields.hasErrors('middleName')}" th:errors="*{middleName}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="password-register" class="form-label">Пароль</label>
+        <input type="password" class="form-control" id="password-register" th:field="*{password}" placeholder="Пароль">
+        <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Подтвердите пароль</label>
+        <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Подтвердите пароль">
+        <small th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">Телефон</label>
+        <input type="text" class="form-control" id="phone" th:field="*{phone}" placeholder="Телефон">
+        <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="photoUrl" class="form-label">Фото URL</label>
+        <input type="text" class="form-control" id="photoUrl" th:field="*{photoUrl}" placeholder="Введите URL фото">
+        <small th:if="${#fields.hasErrors('photoUrl')}" th:errors="*{photoUrl}" class="text-danger">Error message</small>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label">Роль</label>
+        <select class="form-select" id="role" th:field="*{role}">
+          <option value="CLIENT">Клиент</option>
+          <option value="AGENT">Агент</option>
+        </select>
+        <small th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="text-danger"></small>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">Зарегистрироваться</button>
+    </form>
+
+
+    <div class="d-flex justify-content-center my-3">
+      <span>или</span>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <a href="/users/login" class="btn btn-link">Уже есть аккаунт? Войти</a>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <div class="row mb-3">
+    <div class="col-md-12 d-flex justify-content-between">
+      <div>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/client}">Клиенты</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/agent}">Агенты</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/property}">Квартиры</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/agreement}">Договоры</a>
+        <a class="btn btn-outline-secondary" th:href="@{/admin/review}">Отзывы</a>
+      </div>
+      <a class="btn btn-success" th:href="@{/admin/client/create}">Добавить новую запись</a>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="border p-3">
+      <h5>Клиенты</h5>
+
+      <table class="table">
+        <thead>
+        <tr>
+          <th>id</th>
+          <th>Имя</th>
+          <th>Фамилия</th>
+          <th>Отчество</th>
+          <th>Телефон</th>
+          <th>Email</th>
+          <th>PhotoUrl</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r : ${model.list}">
+          <td th:text="${r.id}"></td>
+          <td th:text="${r.firstName}"></td>
+          <td th:text="${r.lastName}"></td>
+          <td th:text="${r.middleName}"></td>
+          <td th:text="${r.phone}"></td>
+          <td th:text="${r.email}"></td>
+          <td th:text="${r.photoUrl}"></td>
+          <td>
+            <a class="btn btn-warning btn-sm" th:href="@{'/admin/client/edit/' + ${r.id}}">Редактировать</a>
+            <a class="btn btn-danger btn-sm" th:href="@{'/admin/client/delete/' + ${r.id}}">Удалить</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <nav th:if="${model.totalPages > 1}" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item"
+              th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
+              th:classappend="${pageNumber == filter.page} ? 'active'">
+            <a class="page-link"
+               th:href="@{/admin/client(page=${pageNumber}, size=${filter.size})}"
+               th:text="${pageNumber}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+
+</body>
+</html>

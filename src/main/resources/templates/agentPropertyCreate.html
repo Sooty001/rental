@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head th:insert="~{fragments/head}"></head>
+<body>
+<header th:insert="~{fragments/header}"></header>
+
+<main class="container">
+  <h5>Создать объект недвижимости</h5>
+  <form class="d-flex flex-column align-items-center" method="post" th:action="@{/agent/createProperty}" th:object="${form}">
+    <div class="mb-3 w-50">
+      <label for="city" class="form-label fw-bold">Город</label>
+      <input type="text" class="form-control" id="city" th:field="*{city}" placeholder="Введите город">
+      <small th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="street" class="form-label fw-bold">Улица</label>
+      <input type="text" class="form-control" id="street" th:field="*{street}" placeholder="Введите улицу">
+      <small th:if="${#fields.hasErrors('street')}" th:errors="*{street}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="houseNumber" class="form-label fw-bold">Номер дома</label>
+      <input type="number" class="form-control" id="houseNumber" th:field="*{houseNumber}" placeholder="Введите номер дома">
+      <small th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="floor" class="form-label fw-bold">Этаж</label>
+      <input type="number" class="form-control" id="floor" th:field="*{floor}" placeholder="Введите этаж">
+      <small th:if="${#fields.hasErrors('floor')}" th:errors="*{floor}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="apartmentNumber" class="form-label fw-bold">Номер квартиры</label>
+      <input type="number" class="form-control" id="apartmentNumber" th:field="*{apartmentNumber}" placeholder="Введите номер квартиры">
+      <small th:if="${#fields.hasErrors('apartmentNumber')}" th:errors="*{apartmentNumber}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="distanceToCityCenter" class="form-label fw-bold">Расстояние до центра города</label>
+      <input type="number" step="0.1" class="form-control" id="distanceToCityCenter" th:field="*{distanceToCityCenter}" placeholder="Введите расстояние до центра">
+      <small th:if="${#fields.hasErrors('distanceToCityCenter')}" th:errors="*{distanceToCityCenter}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="square" class="form-label fw-bold">Площадь</label>
+      <input type="number" step="0.1" class="form-control" id="square" th:field="*{square}" placeholder="Введите площадь">
+      <small th:if="${#fields.hasErrors('square')}" th:errors="*{square}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="rooms" class="form-label fw-bold">Количество комнат</label>
+      <input type="number" class="form-control" id="rooms" th:field="*{rooms}" placeholder="Введите количество комнат">
+      <small th:if="${#fields.hasErrors('rooms')}" th:errors="*{rooms}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="price" class="form-label fw-bold">Цена</label>
+      <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" placeholder="Введите цену">
+      <small th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="status" class="form-label fw-bold">Статус</label>
+      <input type="text" class="form-control" id="status" th:field="*{status}" placeholder="Введите статус">
+      <small th:if="${#fields.hasErrors('status')}" th:errors="*{status}" class="text-danger">Error message</small>
+    </div>
+    <div class="mb-3 w-50">
+      <label for="photoUrl" class="form-label fw-bold">Фото URL</label>
+      <input type="text" class="form-control" id="photoUrl" th:field="*{photoUrl}" placeholder="Введите URL фото">
+      <small th:if="${#fields.hasErrors('photoUrl')}" th:errors="*{photoUrl}" class="text-danger">Error message</small>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+  </form>
+</main>
+
+<footer th:replace="~{fragments/footer}"></footer>
+</body>
+</html>

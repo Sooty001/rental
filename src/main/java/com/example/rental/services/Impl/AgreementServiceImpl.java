@@ -10,6 +10,9 @@ import com.example.rental.repositories.AgreementRepository;
 import com.example.rental.services.AgreementService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+//@EnableCaching
 public class AgreementServiceImpl implements AgreementService {
     private final AgreementRepository agreementRepository;
     private final PropertyRepository propertyRepository;
@@ -41,6 +45,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
+    @Cacheable(value = "complAgreement", key = "#clientId + '_' + T(java.time.LocalDate).now().toString()")
     public List<AgreementDto> findCompletedAgreementByClientId(int clientId) {
         List<Agreement> agreements = agreementRepository.findCompletedAgreementByClientId(clientId, LocalDate.now(), false);
         return agreements.stream().map(agreement -> modelMapper.map(agreement, AgreementDto.class)).toList();
@@ -83,6 +88,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
     public void create(AgreementDto agreementDto) {
         Agreement agreement = modelMapper.map(agreementDto, Agreement.class);
         agreement.setReview(null);
@@ -91,6 +97,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
     public void update(AgreementDto agreementDto, int id) {
         Agreement oldAgreement = agreementRepository.findById(Agreement.class, id);
         Agreement ag = modelMapper.map(agreementDto, Agreement.class);
@@ -100,6 +107,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
     public void markDeleteById(int id) {
         Agreement agreement = agreementRepository.findById(Agreement.class, id);
         agreement.setIsDeleted(true);

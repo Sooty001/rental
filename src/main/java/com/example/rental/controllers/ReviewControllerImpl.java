@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ public class ReviewControllerImpl implements ReviewController {
     private final AuthService authService;
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
+    @Autowired
     public ReviewControllerImpl(ReviewService reviewService, PropertyService propertyService, AgentService agentService, AgreementService agreementService, AuthService authService) {
         this.reviewService = reviewService;
         this.propertyService = propertyService;

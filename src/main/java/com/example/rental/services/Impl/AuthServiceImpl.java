@@ -49,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
                 userRepository.findByEmail(regDto.getEmail()),
                 regDto.getPassword(),
                 passwordEncoder.encode(regDto.getPassword()),
-                regDto.getRole().equals("CLIENT") ? UserRoles.CLIENT : UserRoles.AGENT
+                role
         );
 
         userRepository.create(user);
@@ -72,18 +72,18 @@ public class AuthServiceImpl implements AuthService {
     public BaseUserDto getUser(String email) {
         User user = userRepository.findUserByEmail(email);
 
-        BaseUserDto userBaseDto = null;
+        BaseUserDto baseUserDto = null;
 
         if (user.getRole() == UserRoles.CLIENT || user.getRole() == UserRoles.ADMIN) {
             Client client = clientRepository.findClientByUserId(user.getId(), false);
-            userBaseDto = modelMapper.map(client, BaseUserDto.class);
+            baseUserDto = modelMapper.map(client, BaseUserDto.class);
         }
         else if (user.getRole() == UserRoles.AGENT) {
             Agent agent = agentRepository.findAgentByUserId(user.getId(),false);
-            userBaseDto = modelMapper.map(agent, BaseUserDto.class);
+            baseUserDto = modelMapper.map(agent, BaseUserDto.class);
         }
 
-        return userBaseDto;
+        return baseUserDto;
     }
 
     @Override

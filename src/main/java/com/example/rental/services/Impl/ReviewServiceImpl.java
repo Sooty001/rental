@@ -12,12 +12,12 @@ import com.example.rental.services.ReviewService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -54,18 +54,23 @@ public class ReviewServiceImpl implements ReviewService {
 
         List<ReviewDto> reviewDto = reviews.getContent().stream()
                 .map(review -> modelMapper.map(review, ReviewDto.class))
-                .collect(Collectors.toList());
+                .toList();
 
         return new PageImpl<>(reviewDto, reviews.getPageable(), reviews.getTotalElements());
     }
 
     @Override
     public ReviewDto findById(int id) {
-        return modelMapper.map(reviewRepository.findById(Review.class, id), ReviewDto.class);
+        Review review = reviewRepository.findById(Review.class, id);
+        if (review == null) {
+            throw new RuntimeException("Review with id:" + id + " not found");
+        }
+        return modelMapper.map(review, ReviewDto.class);
     }
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "agreementsWithReviews", allEntries = true)
     public void create(ReviewDto reviewDto) {
         Review review = modelMapper.map(reviewDto, Review.class);
         Agreement agreement = agreementRepository.findById(Agreement.class, reviewDto.getAgreementId());
@@ -85,6 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "agreementsWithReviews", allEntries = true)
     public void markDeleteById(int id) {
         Review re = reviewRepository.findById(Review.class, id);
         re.setIsDeleted(true);

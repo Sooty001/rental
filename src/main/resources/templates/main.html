@@ -17,9 +17,13 @@
             <a class="btn btn-outline-dark me-2" th:href="@{/(sort='popular')}">Самые популярные</a>
             <a class="btn btn-outline-dark me-2" th:href="@{/(sort='rating')}">По рейтингу</a>
             <a class="btn btn btn-primary me-2" sec:authorize="!isAuthenticated()" th:href="@{/users/login}">Войти</a>
-            <a class="btn btn btn-primary me-2" sec:authorize="hasRole('CLIENT')" th:href="@{/client/profile}">Профиль</a>
-            <a class="btn btn btn-primary me-2" sec:authorize="hasRole('AGENT')" th:href="@{/agent/profile}">Профиль</a>
             <a class="btn btn-danger me-2" sec:authorize="hasRole('ADMIN')" th:href="@{/admin/client}">Админка</a>
+            <a th:href="@{/client/profile}" sec:authorize="hasRole('CLIENT') or hasRole('ADMIN')">
+                <img th:src="'/images/' + ${model.base.photoUrl}" alt="User Icon" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+            </a>
+            <a th:href="@{/agent/profile}" sec:authorize="hasRole('AGENT')">
+                <img th:src="'/images/' + ${model.base.photoUrl}" alt="User Icon" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+            </a>
             <form th:action="@{/users/logout}" method="post" style="display: inline;">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
                 <button type="submit" class="btn btn-link me-2" sec:authorize="isAuthenticated()">
@@ -69,14 +73,12 @@
                 th:each="pageNumber : ${#numbers.sequence(1, model.totalPages)}"
                 th:classappend="${pageNumber == form.page} ? 'active'">
                 <a class="page-link"
-                   th:href="@{/(page=${pageNumber}, size=${form.size}, city=${city != null ? city : 'no'}, sort=${sort != null ? sort : null})}"
+                   th:href="@{/(page=${pageNumber}, size=${form.size}, city=${sortForm.city != null ? sortForm.city : 'no'}, sort=${sortForm.sort != null ? sortForm.sort : null})}"
                    th:text="${pageNumber}">1</a>
             </li>
         </ul>
     </nav>
 </main>
-
-
 <footer th:replace="~{fragments/footer}"></footer>
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

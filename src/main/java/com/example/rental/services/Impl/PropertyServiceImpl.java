@@ -19,10 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-//@EnableCaching
+@EnableCaching
 public class PropertyServiceImpl implements PropertyService {
     private final PropertyRepository propertyRepository;
     private final AgreementRepository agreementRepository;
@@ -47,13 +46,6 @@ public class PropertyServiceImpl implements PropertyService {
     @Override
     @Cacheable("main")
     public Page<PropertyDto> choosingSort(String city, String sort, int page, int size, String search) {
-
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         Page<PropertyDto> propertyPage;
         String sorting = sort != null ? sort : "no";
         if (search != null && !search.isBlank()) {
@@ -160,8 +152,7 @@ public class PropertyServiceImpl implements PropertyService {
         return convertAgreementsToPropertyDto(agreementRepository.findCompletedAgreementByClientId(ClientId, LocalDate.now(), false));
     }
 
-    @Override
-    public List<PropertyDto> convertAgreementsToPropertyDto(List<Agreement> agreements) {
+    private List<PropertyDto> convertAgreementsToPropertyDto(List<Agreement> agreements) {
         return agreements.stream().map(a -> modelMapper.map(a.getProperty(), PropertyDto.class)).toList();
     }
 
@@ -189,7 +180,7 @@ public class PropertyServiceImpl implements PropertyService {
 
         List<PropertyDto> propertyDto = properties.getContent().stream()
                 .map(property -> modelMapper.map(property, PropertyDto.class))
-                .collect(Collectors.toList());
+                .toList();
 
         return new PageImpl<>(propertyDto, properties.getPageable(), properties.getTotalElements());
     }
@@ -208,7 +199,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "main", key = "#id")
+    @CacheEvict(cacheNames = "main", allEntries = true)
     public void update(PropertyDto propertyDto, int id) {
         Property oldProperty = propertyRepository.findById(Property.class, id);
         Property pr = modelMapper.map(propertyDto, Property.class);
@@ -218,7 +209,7 @@ public class PropertyServiceImpl implements PropertyService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "main", key = "#id")
+    @CacheEvict(cacheNames = "main", allEntries = true)
     public void markDeleteById(int id) {
         Property property = propertyRepository.findById(Property.class, id);
         property.setIsDeleted(true);

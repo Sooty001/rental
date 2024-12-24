@@ -21,7 +21,7 @@ public class Review extends BaseEntityId {
 
     protected Review() {}
 
-    @Column(name = "comment")
+    @Column(name = "comment", nullable = false)
     public String getComment() {
         return comment;
     }
@@ -32,7 +32,7 @@ public class Review extends BaseEntityId {
         this.comment = comment;
     }
 
-    @Column(name = "agent_rating")
+    @Column(name = "agent_rating", nullable = false)
     public int getAgentRating() {
         return agentRating;
     }
@@ -43,7 +43,7 @@ public class Review extends BaseEntityId {
         this.agentRating = agentRating;
     }
 
-    @Column(name = "property_rating")
+    @Column(name = "property_rating", nullable = false)
     public int getPropertyRating() {
         return propertyRating;
     }
@@ -63,7 +63,7 @@ public class Review extends BaseEntityId {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "agreement_id", referencedColumnName = "id", updatable = false)
+    @JoinColumn(name = "agreement_id", referencedColumnName = "id", nullable = false, updatable = false)
     public Agreement getAgreement() {
         return agreement;
     }

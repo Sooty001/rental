@@ -35,7 +35,7 @@ public class RedisConfig {
                 .cacheDefaults(cacheConfig)
                 .withCacheConfiguration("main", myDefaultCacheConfig(Duration.ofMinutes(30)))
                 .withCacheConfiguration("topAgent", myDefaultCacheConfig(Duration.ofMinutes(30)))
-                .withCacheConfiguration("complAgreement", myDefaultCacheConfig(Duration.ofMinutes(30)))
+                .withCacheConfiguration("agreementsWithReviews", myDefaultCacheConfig(Duration.ofMinutes(30)))
                 .build();
     }
 

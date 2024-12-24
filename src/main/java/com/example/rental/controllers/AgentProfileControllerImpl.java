@@ -27,7 +27,7 @@ import java.util.List;
 public class AgentProfileControllerImpl implements AgentProfileController {
     private final PropertyService propertyService;
     private final AuthService authService;
-    private static final Logger LOG = LogManager.getLogger(AgentProfileControllerImpl.class);
+    private static final Logger LOG = LogManager.getLogger(Controller.class);
 
     @Autowired
     public AgentProfileControllerImpl(PropertyService propertyService, AuthService authService) {
@@ -66,7 +66,6 @@ public class AgentProfileControllerImpl implements AgentProfileController {
     public String createFormPropertyView(Principal principal, Model model) {
         String username = principal.getName();
         LOG.log(Level.INFO, "User with email: " + username + " accessed the createProperty method");
-        AgentDto ag = authService.getAgent(username);
         AdminEditViewModel viewModel = new AdminEditViewModel(createBaseViewModel("Создание", principal));
 
         model.addAttribute("model", viewModel);

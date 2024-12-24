@@ -19,7 +19,6 @@ public interface PropertyService {
     int countAvailablePropertyByAgentId(int id);
     List<PropertyDto> findPropertyByCurrentAgreementAndClientId(int ClientId);
     List<PropertyDto> findPropertyByCompletedAgreementAndClientId(int ClientId);
-    List<PropertyDto> convertAgreementsToPropertyDto(List<Agreement> agreements);
     void updatePropertyRating(Agreement agreement);
 
     Page<PropertyDto> findAll(int page, int size);

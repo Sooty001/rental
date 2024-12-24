@@ -1,5 +1,6 @@
 package com.example.rental.services.Impl;
 
+import com.example.rental.dto.AgreementsStatDto;
 import com.example.rental.exceptions.AccessDeniedException;
 import com.example.rental.exceptions.AgreementNotFoundException;
 import com.example.rental.models.Property;
@@ -18,13 +19,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
-//@EnableCaching
+@EnableCaching
 public class AgreementServiceImpl implements AgreementService {
     private final AgreementRepository agreementRepository;
     private final PropertyRepository propertyRepository;
@@ -40,31 +38,28 @@ public class AgreementServiceImpl implements AgreementService {
     @Override
     public void validateAgreementOwnership(int agreementId, int clientId) {
         Agreement agreement = agreementRepository.findById(Agreement.class, agreementId);
-        if (agreement == null) { throw new AgreementNotFoundException(); }
         if (agreement.getClient().getId() != clientId) { throw new AccessDeniedException(); }
     }
 
     @Override
-    @Cacheable(value = "complAgreement", key = "#clientId + '_' + T(java.time.LocalDate).now().toString()")
     public List<AgreementDto> findCompletedAgreementByClientId(int clientId) {
         List<Agreement> agreements = agreementRepository.findCompletedAgreementByClientId(clientId, LocalDate.now(), false);
         return agreements.stream().map(agreement -> modelMapper.map(agreement, AgreementDto.class)).toList();
     }
 
     @Override
-    public Map<Integer, Integer> countAgreementsWithReviewsAndAllByAgentId(int agentId) {
+    @Cacheable(value = "agreementsWithReviews")
+    public AgreementsStatDto countAgreementsWithReviewsAndAllByAgentId(int agentId) {
         int countReviews = 0;
         int countAllAgreement = 0;
         List<Property> listProperty = propertyRepository.findAllPropertyByAgentId(agentId, false);
-        Map<Integer, Integer> map = new HashMap<>();
 
         for (Property pr : listProperty) {
             countReviews += agreementRepository.countAgreementsWithReviewByPropertyId(pr.getId(), false);
             countAllAgreement += agreementRepository.countAgreementsByPropertyId(pr.getId(), false);
         }
 
-        map.put(countReviews, countAllAgreement);
-        return map;
+        return new AgreementsStatDto(countReviews, countAllAgreement);
     }
 
     @Override
@@ -73,7 +68,7 @@ public class AgreementServiceImpl implements AgreementService {
 
         List<AgreementDto> agreementDto = agreements.getContent().stream()
                 .map(agreement -> modelMapper.map(agreement, AgreementDto.class))
-                .collect(Collectors.toList());
+                .toList();
 
         return new PageImpl<>(agreementDto, agreements.getPageable(), agreements.getTotalElements());
     }
@@ -88,7 +83,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
+    @CacheEvict(cacheNames = "agreementsWithReviews", allEntries = true)
     public void create(AgreementDto agreementDto) {
         Agreement agreement = modelMapper.map(agreementDto, Agreement.class);
         agreement.setReview(null);
@@ -97,7 +92,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
+    @CacheEvict(cacheNames = "agreementsWithReviews", allEntries = true)
     public void update(AgreementDto agreementDto, int id) {
         Agreement oldAgreement = agreementRepository.findById(Agreement.class, id);
         Agreement ag = modelMapper.map(agreementDto, Agreement.class);
@@ -107,7 +102,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "complAgreement", allEntries = true)
+    @CacheEvict(cacheNames = "agreementsWithReviews", allEntries = true)
     public void markDeleteById(int id) {
         Agreement agreement = agreementRepository.findById(Agreement.class, id);
         agreement.setIsDeleted(true);

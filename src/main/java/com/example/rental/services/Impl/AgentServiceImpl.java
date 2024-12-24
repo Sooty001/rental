@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-//@EnableCaching
+@EnableCaching
 public class AgentServiceImpl implements AgentService {
     private final AgentRepository agentRepository;
     private final AgreementRepository agreementRepository;
@@ -157,7 +157,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "topAgent", key = "#id")
+    @CacheEvict(cacheNames = "topAgent", allEntries = true)
     public void update(AgentDto agentDto, int id) {
         Agent oldAgent = agentRepository.findById(Agent.class, id);
         Agent ag = modelMapper.map(agentDto, Agent.class);
@@ -172,7 +172,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "topAgent", key = "#id")
+    @CacheEvict(cacheNames = "topAgent", allEntries = true)
     public void markDeleteById(int id) {
         Agent agent = agentRepository.findById(Agent.class, id);
         agent.setIsDeleted(true);

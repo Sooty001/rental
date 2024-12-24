@@ -1,7 +1,11 @@
 package com.example.rental.controllers;
 
+import com.example.rental.dto.BaseUserDto;
 import com.example.rental.dto.PropertyDto;
+import com.example.rental.services.AuthService;
 import com.example.rentalcontracts.controllers.MainController;
+import com.example.rentalcontracts.form.SortForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import com.example.rental.services.PropertyService;
@@ -25,47 +29,50 @@ import org.apache.logging.log4j.Level;
 @RequestMapping("/")
 public class MainControllerImpl implements MainController {
     private final PropertyService propertyService;
+    private final AuthService authService;
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
-    public MainControllerImpl(PropertyService propertyService) {
+    @Autowired
+    public MainControllerImpl(PropertyService propertyService, AuthService authService) {
         this.propertyService = propertyService;
+        this.authService = authService;
     }
 
     @Override
     @GetMapping
-    public String mainPage(@RequestParam(required = false) String sort,
-                           @RequestParam(required = false) String city,
-                           @RequestParam(required = false) String search,
-                           @ModelAttribute("form") SearchForm form, Model model) {
-        LOG.log(Level.INFO, "mainPage method called with parameters: sort={}, city={}, search={}, page={}, " +
-                "size={}", sort, city, search, form.page(), form.size());
+    public String mainPage(@RequestParam(required = false) String search,
+                           @ModelAttribute("sortForm") SortForm sortForm,
+                           @ModelAttribute("form") SearchForm form, Principal principal, Model model) {
+        LOG.log(Level.INFO, "User " + (principal != null ? principal.getName() : "unauthorized") + " called mainPage method with parameters: sort={}, city={}, search={}, page={}, " +
+                "size={}", sortForm.sort(), sortForm.city(), search, form.page(), form.size());
+
         int page = form.page() != null ? form.page() : 1;
         int size = form.size() != null ? form.size() : 3;
         form = new SearchForm(page, size);
 
-        Page<PropertyDto> propertyPage = propertyService.choosingSort(city, sort, page, size, search);
+        Page<PropertyDto> propertyPage = propertyService.choosingSort(sortForm.city(), sortForm.sort(), page, size, search);
 
         List<PropertyCardViewModel> propertyCardViewModel = propertyPage.stream()
                 .map(p -> new PropertyCardViewModel(p.getPhotoUrl(), p.getId(),p.getRooms(), p.getSquare(), p.getFloor(),
                         p.getPrice(), p.getRating(), p.getDistanceToCenter(), p.getCity(), p.getStreet(), p.getHouseNumber())).toList();
 
-        MainViewModel viewModel = new MainViewModel(createBaseViewModel("Главная", null),
+        MainViewModel viewModel = new MainViewModel(createBaseViewModel("Главная", principal),
                 propertyCardViewModel, propertyPage.getTotalPages());
 
         model.addAttribute("model", viewModel);
+        model.addAttribute("sortForm", sortForm);
         model.addAttribute("form", form);
-        model.addAttribute("city", city);
-        model.addAttribute("sort", sort);
         model.addAttribute("search", search);
         return "main";
     }
 
     @Override
     public BaseViewModel createBaseViewModel(String title, Principal principal) {
-        return new BaseViewModel(
-                title,
-                null,
-                null
-        );
+        if (principal != null) {
+            String username = principal.getName();
+            BaseUserDto user = authService.getUser(username);
+            return new BaseViewModel(title, user.getFirstName(), user.getPhotoUrl());
+        }
+        return new BaseViewModel(title, null, null);
     }
 }

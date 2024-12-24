@@ -14,6 +14,7 @@ import com.example.rentalcontracts.viewmodel.cards.PropertyNowCardViewModel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class ClientProfileControllerImpl implements ClientProfileController {
     private final AuthService authService;
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
+    @Autowired
     public ClientProfileControllerImpl(PropertyService propertyService, AgreementService agreementService, AuthService authService) {
         this.propertyService = propertyService;
         this.agreementService = agreementService;

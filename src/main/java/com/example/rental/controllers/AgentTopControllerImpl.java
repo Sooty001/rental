@@ -1,6 +1,7 @@
 package com.example.rental.controllers;
 
 import com.example.rental.dto.AgentDto;
+import com.example.rental.dto.AgreementsStatDto;
 import com.example.rental.dto.BaseUserDto;
 import com.example.rental.services.AgentService;
 import com.example.rental.services.AgreementService;
@@ -13,6 +14,7 @@ import com.example.rentalcontracts.viewmodel.cards.AgentCardViewModel;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/agents")
@@ -32,6 +33,7 @@ public class AgentTopControllerImpl implements AgentTopController {
     private final AuthService authService;
     private static final Logger LOG = LogManager.getLogger(Controller.class);
 
+    @Autowired
     public AgentTopControllerImpl(AgentService agentService, AgreementService agreementService, PropertyService propertyService, AuthService authService) {
         this.agentService = agentService;
         this.agreementService = agreementService;
@@ -50,17 +52,15 @@ public class AgentTopControllerImpl implements AgentTopController {
         List<AgentDto> agentDto = agentService.choosingSort(sort);
 
         List<AgentCardViewModel> agentCardViewModel = agentDto.stream().map(ag -> {
-            Map<Integer, Integer> agreementsMap = agreementService.countAgreementsWithReviewsAndAllByAgentId(ag.getId());
-            int agreementsWithReviews = agreementsMap.keySet().iterator().next();
-            int allAgreements = agreementsMap.get(agreementsWithReviews);
+            AgreementsStatDto agreementsStat = agreementService.countAgreementsWithReviewsAndAllByAgentId(ag.getId());
 
             return new AgentCardViewModel(
                     ag.getPhotoUrl(),
                     ag.getFirstName(),
                     ag.getMiddleName(),
                     ag.getRating(),
-                    agreementsWithReviews,
-                    allAgreements,
+                    agreementsStat.getCountReviews(),
+                    agreementsStat.getCountAllAgreement(),
                     propertyService.countAvailablePropertyByAgentId(ag.getId())
             );
         }).toList();

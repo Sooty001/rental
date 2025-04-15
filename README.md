@@ -58,6 +58,10 @@
 ![Image](https://github.com/user-attachments/assets/c466818c-696f-4124-b380-24c8579c1968)
 
 
+ Топ агентов с сортировками:
+
+![Image](https://github.com/user-attachments/assets/1d830058-d84c-43de-bcb5-9f97d32f81e2)
+
 Панель администратора:
 
 ![Image](https://github.com/user-attachments/assets/4df61a79-281b-47e3-963f-fc57c0367dd0)
